@@ -37,7 +37,9 @@ pygame.display.set_caption("Flappy Bird")
 # Images
 background = pygame.image.load('images/bg.png')
 ground = pygame.image.load('images/ground.png')
+gameOver = pygame.image.load('images/game_over.png')
 restart = pygame.image.load('images/restart.png')
+
 
 #function for outputting text onto the screen
 def draw_text(text, font, text_col, x, y):
@@ -121,6 +123,28 @@ class Pipe(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+class Button():
+    def __init__(self, x, y, image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+
+    def draw(self):
+        action = False
+
+        # Get mouse position
+        pos = pygame.mouse.get_pos()
+
+        # Check mouse over and clicked conditions
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                action = True
+
+        # Draw button
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+        return action
+
 
 bird_group = pygame.sprite.Group()
 pipe_group = pygame.sprite.Group()
@@ -129,6 +153,8 @@ flappy = Bird(100, int(screen_height / 2))
 
 bird_group.add(flappy)
 
+# Create restart button instance
+button = Button(screen_width // 2 - 50, screen_height // 2 + 20, restart)
 
 
 # Game loop
@@ -190,8 +216,8 @@ while running:
     # Check for game over and reset
     if game_over == True:
         # Apper restart image in the middle top of the screen
-        screen.blit(restart, (int(screen_width / 2)  - 200, int(screen_height / 2) - 50))
-        if pygame.mouse.get_pressed()[0] == 1:
+        screen.blit(gameOver, (int(screen_width / 2)  - 200, int(screen_height / 2) - 140))
+        if button.draw():
             game_over = False
             score = reset_game()
         
