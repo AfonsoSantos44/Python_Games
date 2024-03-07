@@ -19,8 +19,8 @@ fps = 60
 pygame.display.set_caption("T-Rex")
 
 # Images
-ground = pygame.image.load('T-Rex/images/ground.png')
-trex = pygame.image.load('T-Rex/images/t rex.png')
+ground = pygame.image.load('Python_Games\T-Rex\images\ground.png')
+trex = pygame.image.load('Python_Games\T-Rex\images\dino.png')
 
 # Create the screen
 screen = pygame.display.set_mode((screen_width, screen_height))
