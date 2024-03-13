@@ -1,88 +1,87 @@
 import pygame
+from PIL import  Image
 
 # Initialize the game
 pygame.init()
 
 # Set the screen size
-screen_width = 1000
-screen_height = 500
+screen_width = 600
+screen_height = 200
 
 # Variables
-ground_x = 0
-ground_speed = 3
-trex_start_pos = 0
-
 clock = pygame.time.Clock()
-fps = 60
-
-# Title and Icon
-pygame.display.set_caption("T-Rex")
-
-# Load images
-ground = pygame.image.load('Python_Games/T-Rex/images/ground.png') # Added .convert() for better performance
-trex_img = pygame.image.load('Python_Games/T-Rex/images/dino.png') # Use convert_alpha() for images with transparency
+run = True
+bg = (0,150)
+bg1 = (600,150)
+speed = 1
+lock = False
+height = 110
 
 # Create the screen
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 
-class Trex(pygame.sprite.Sprite):
-    def __init__(self, x, y, images):
-        super().__init__()
-        self.images = images
-        self.index = 0
-        self.image = self.images[self.index]
-        self.rect = self.image.get_rect(topleft=(x, y))
-        self.jump = False  
-        self.vel = 0
+# Title and Icon
+pygame.display.set_caption("T-Rex")
 
-    def update(self):
-        # Gravity
-        self.vel += 0.5
-        self.rect.y += self.vel
-        if self.rect.y >= 250:
-            self.rect.y = 250
-            self.vel = 0
-            self.jump = False
+# Load images
+player_init = Image.open("resources.png").crop((77,5,163,96)).convert("RGBA")
+player_init = player_init.resize(list(map(lambda x:x//2 , player_init.size)))
 
-        # Jump and Get Down
-        if pygame.key.get_pressed()[pygame.K_UP] and not self.jump:
-            self.jump = True
-            self.vel -= 10
-        if pygame.key.get_pressed()[pygame.K_DOWN]:
-            self.index = 1  # Change to the index of the sprite you want to display when getting down
-            
+ground = Image.open("resources.png").crop((2,102,2401,127)).convert("RGBA")
+ground = ground.resize(list(map(lambda x:x//2 , ground.size)))
 
 
-trex_group = pygame.sprite.Group()
-
-trex_sprite = Trex(trex_start_pos, 250, [trex_img])
-trex_group.add(trex_sprite)  
 
 
 # Main game loop
-run = True
-while run:
-    clock.tick(fps)
+start = True
+while  run:
 
+    # Draw the background
+    screen.fill((255, 255, 255))
+  
     # Event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
 
-    # Update ground position
-    ground_x -= ground_speed
+    # Draw the player
+    player =  screen.blit(pygame.image.fromstring(player_init.tobytes(), player_init.size, 'RGBA'), (5,height))
 
-    # Draw elements
-    screen.fill((255, 255, 255))
-    screen.blit(ground, (ground_x, 300))
-    trex_group.draw(screen)
-    trex_group.update()
+        
+    # Draw the ground
+    screen.blit(pygame.image.fromstring(ground.tobytes(), ground.size, 'RGBA'), bg)
+    screen.blit(pygame.image.fromstring(ground.tobytes(), ground.size, 'RGBA'), bg1)
 
-    # Reset ground position for infinite scrolling
-    if abs(ground_x) > 2442 - screen_width:
-        ground_x = 0
+    if start:
+        # Move the ground
+        if not lock:
+                bg = (bg[0]-speed, bg[1])
+                if bg[0]<=-(600):
+                    lock = 1
+        if -bg[0]>=600 and lock:
+                bg1 = (bg1[0]-speed, bg1[1])
+                bg = (bg[0]-speed, bg[1])
+                if -bg1[0]>=600:bg = (600,150)
+        if -bg1[0]>=600 and lock:
+                bg = (bg[0]-speed, bg1[1])
+                bg1 = (bg1[0]-speed, bg1[1])
+                if -bg[0]>=600:bg1 = (600,150)      
+            
 
-    pygame.display.flip()  # Used flip instead of update for better performance
+
+
+
+
+
+
+
+
+
+        # Update the display
+        pygame.display.update()
+        clock.tick(120)
+   
 
 pygame.quit()
