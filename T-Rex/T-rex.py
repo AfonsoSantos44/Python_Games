@@ -31,33 +31,39 @@ ground = Image.open("resources.png").crop((2, 102, 2401, 127)).convert("RGBA")
 ground = ground.resize(list(map(lambda x: x // 2, ground.size)))
 
 
-class Player:
+class Player(pygame.sprite.Sprite):
+
         def __init__(self, x, y):
-                self.x = x
-                self.y = y
-                self.jump = False
-                self.clicked = False  # Flag to track if the up key has been pressed
+            pygame.sprite.Sprite.__init__(self)
+            self.image = pygame.image.fromstring(player_init.tobytes(), player_init.size, 'RGBA')
+            self.rect = self.image.get_rect(center=(x, y))
+            self.vel = 0
+            self.jump = False
+            self.clicked = False  # Flag to track if the up key has been pressed
 
         def update(self):
-                # Gravity
-                if self.y < 110:
-                        self.y += 2
-                else:
-                        self.jump = False
+            # Gravity
+            if self.rect.y < 110:
+                self.rect.y += 2
+            else:
+                self.jump = False
 
-                # Jumping
-                keys = pygame.key.get_pressed()
-                if keys[pygame.K_UP] and not self.clicked and not self.jump:
-                        self.jump = True
-                        self.y -= 50  # Adjust the jump height as needed
-                        self.clicked = True  # Set flag to True when key is pressed
-                elif not keys[pygame.K_UP]:
-                        self.clicked = False  # Reset flag when key is released
+            # Jumping
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_UP] and not self.clicked and not self.jump:
+                self.jump = True
+                self.rect.y -= 50  # Adjust the jump height as needed
+                self.clicked = True  # Set flag to True when key is pressed
+            elif not keys[pygame.K_UP]:
+                self.clicked = False  # Reset flag when key is released
+
 
 
 # Create the player
-player = Player(5, height)
+player_group = pygame.sprite.Group()
 
+player = Player(20, 130)
+player_group.add(player)
 
 # Main game loop
 start = True
@@ -67,16 +73,14 @@ while run:
         if event.type == pygame.QUIT:
             run = False
 
-   
-
     # Draw the background
     screen.fill((255, 255, 255))
 
     # Draw the player
-    screen.blit(pygame.image.fromstring(player_init.tobytes(), player_init.size, 'RGBA'), (5, player.y))
+    player_group.draw(screen)
 
-     # Update the player
-    player.update()
+    # Update the player
+    player_group.update()
 
     # Draw the ground
     screen.blit(pygame.image.fromstring(ground.tobytes(), ground.size, 'RGBA'), bg)
