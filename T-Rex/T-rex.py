@@ -1,111 +1,108 @@
-import pygame
-from PIL import Image
+import pygame 
 
-# Initialize the game
+
 pygame.init()
 
-# Set the screen size
-screen_width = 600
-screen_height = 200
+# Global Variables
 
-# Variables
-clock = pygame.time.Clock()
-run = True
-bg = (0, 150)
-bg1 = (600, 150)
-speed = 1
-lock = False
-height = 110
+# Screen
+Screen_Width = 1100
+Screen_Height = 600
 
-# Create the screen
-screen = pygame.display.set_mode((screen_width, screen_height))
+# Images
 
-# Title and Icon
+# Dino
+RUNNING = [pygame.image.load('T-Rex/Assets/Dino/DinoRun1.png'), pygame.image.load('T-Rex/Assets/Dino/DinoRun2.png')]
+JUMPING = pygame.image.load('T-Rex/Assets/Dino/DinoJump.png')
+DUCKING = [pygame.image.load('T-Rex/Assets/Dino/DinoDuck1.png'), pygame.image.load('T-Rex/Assets/Dino/DinoDuck2.png')]
+
+
+class Dino:
+    X_POS = 80
+    Y_POS = 310
+    JUMP_VEL = 8.5
+
+    def __init__(self):
+        self.run.img = RUNNING
+        self.jump.img = JUMPING
+        self.duck.img = DUCKING
+
+        self.dino_run = True
+        self.dino_jump = False
+        self.dino_duck = False
+
+        self.img = self.run.img[0]
+        self.dino_rect = self.img.get_rect()
+        self.dino_rect.x = self.X_POS
+        self.dino_rect.y = self.Y_POS
+
+    def update(self,userInput):
+        if self.dino_run:
+            self.run()
+        if self.dino_jump:
+            self.jump()
+        if self.dino_duck:
+            self.duck()
+
+        if userInput[pygame.K_UP] and not self.dino_jump:
+            self.dino_run = False
+            self.dino_jump = True
+            self.dino_duck = False
+        if userInput[pygame.K_DOWN] and not self.dino_jump:
+            self.dino_run = False
+            self.dino_jump = False
+            self.dino_duck = True
+        if not (self.dino_jump or userInput[pygame.K_DOWN]):
+            self.dino_run = True
+            self.dino_jump = False
+            self.dino_duck = False
+
+    def jump(self):
+        self.img = self.jump.img
+        if self.dino_jump:
+            self.dino_rect.y -= self.JUMP_VEL * 4
+            self.JUMP_VEL -= 0.8
+        if self.JUMP_VEL < self.JUMP_VEL:
+            self.dino_jump = False
+            self.JUMP_VEL = 8.5
+
+    def draw(self, screen):
+        screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
+        
+
+          
+# Initialize the screen
+screen = pygame.display.set_mode((Screen_Width, Screen_Height))
 pygame.display.set_caption("T-Rex")
 
-# Load images
-player_init = Image.open("resources.png").crop((77, 5, 163, 96)).convert("RGBA")
-player_init = player_init.resize(list(map(lambda x: x // 2, player_init.size)))
 
-ground = Image.open("resources.png").crop((2, 102, 2401, 127)).convert("RGBA")
-ground = ground.resize(list(map(lambda x: x // 2, ground.size)))
-
-
-class Player(pygame.sprite.Sprite):
-
-        def __init__(self, x, y):
-            pygame.sprite.Sprite.__init__(self)
-            self.image = pygame.image.fromstring(player_init.tobytes(), player_init.size, 'RGBA')
-            self.rect = self.image.get_rect(center=(x, y))
-            self.vel = 0
-            self.jump = False
-            self.clicked = False  # Flag to track if the up key has been pressed
-
-        def update(self):
-            # Gravity
-            if self.rect.y < 110:
-                self.rect.y += 2
-            else:
-                self.jump = False
-
-            # Jumping
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_UP] and not self.clicked and not self.jump:
-                self.jump = True
-                self.rect.y -= 50  # Adjust the jump height as needed
-                self.clicked = True  # Set flag to True when key is pressed
-            elif not keys[pygame.K_UP]:
-                self.clicked = False  # Reset flag when key is released
+# Main loop
+def main():
+    running = True
+    clock = pygame.time.Clock()
+    fps = 60
+    player = Dino()
 
 
+    
+    while running:
 
-# Create the player
-player_group = pygame.sprite.Group()
+        userInput = pygame.key.get_pressed()
+        
+        # Draw the screen
+        screen.fill((255, 255, 255))
+        player.draw(screen)
+        player.update(userInput)
 
-player = Player(20, 130)
-player_group.add(player)
 
-# Main game loop
-start = True
-while run:
-    # Event handling
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    # Draw the background
-    screen.fill((255, 255, 255))
-
-    # Draw the player
-    player_group.draw(screen)
-
-    # Update the player
-    player_group.update()
-
-    # Draw the ground
-    screen.blit(pygame.image.fromstring(ground.tobytes(), ground.size, 'RGBA'), bg)
-    screen.blit(pygame.image.fromstring(ground.tobytes(), ground.size, 'RGBA'), bg1)
-
-    if start:
-        # Move the ground
-        if not lock:
-            bg = (bg[0] - speed, bg[1])
-            if bg[0] <= -600:
-                lock = 1
-        if -bg[0] >= 600 and lock:
-            bg1 = (bg1[0] - speed, bg1[1])
-            bg = (bg[0] - speed, bg[1])
-            if -bg1[0] >= 600:
-                bg = (600, 150)
-        if -bg1[0] >= 600 and lock:
-            bg = (bg[0] - speed, bg1[1])
-            bg1 = (bg1[0] - speed, bg1[1])
-            if -bg[0] >= 600:
-                bg1 = (600, 150)
-
-        # Update the display
+        # Update the screen
         pygame.display.update()
 
-        clock.tick(120)
+        clock.tick(fps)
 
-pygame.quit()
+    pygame.quit()
+
