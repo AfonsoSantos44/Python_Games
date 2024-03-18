@@ -12,29 +12,31 @@ Screen_Height = 600
 # Images
 
 # Dino
-RUNNING = [pygame.image.load('T-Rex/Assets/Dino/DinoRun1.png'), pygame.image.load('T-Rex/Assets/Dino/DinoRun2.png')]
-JUMPING = pygame.image.load('T-Rex/Assets/Dino/DinoJump.png')
-DUCKING = [pygame.image.load('T-Rex/Assets/Dino/DinoDuck1.png'), pygame.image.load('T-Rex/Assets/Dino/DinoDuck2.png')]
+RUNNING = [pygame.image.load('Assets/Dino/DinoRun1.png'), pygame.image.load('Assets/Dino/DinoRun2.png')]
+JUMPING = pygame.image.load('Assets/Dino/DinoJump.png')
+DUCKING = [pygame.image.load('Assets/Dino/DinoDuck1.png'), pygame.image.load('Assets/Dino/DinoDuck2.png')]
 
 
 class Dino:
     X_POS = 80
     Y_POS = 310
-    JUMP_VEL = 8.5
+    JUMP_VEL = 4.25
 
     def __init__(self):
-        self.run.img = RUNNING
-        self.jump.img = JUMPING
-        self.duck.img = DUCKING
+        self.run_img = RUNNING
+        self.jump_img = JUMPING
+        self.duck_img = DUCKING
 
         self.dino_run = True
         self.dino_jump = False
         self.dino_duck = False
 
-        self.img = self.run.img[0]
+        self.img = self.run_img[0]
         self.dino_rect = self.img.get_rect()
         self.dino_rect.x = self.X_POS
         self.dino_rect.y = self.Y_POS
+        self.step_index = 0
+        self.jump_vel = self.JUMP_VEL
 
     def update(self,userInput):
         if self.dino_run:
@@ -44,7 +46,10 @@ class Dino:
         if self.dino_duck:
             self.duck()
 
-        if userInput[pygame.K_UP] and not self.dino_jump:
+        if self.step_index >= 10:
+            self.step_index = 0
+
+        if userInput[pygame.K_UP] and not self.dino_jump and self.dino_rect.y == self.Y_POS:
             self.dino_run = False
             self.dino_jump = True
             self.dino_duck = False
@@ -58,13 +63,27 @@ class Dino:
             self.dino_duck = False
 
     def jump(self):
-        self.img = self.jump.img
+        self.img = self.jump_img
         if self.dino_jump:
-            self.dino_rect.y -= self.JUMP_VEL * 4
-            self.JUMP_VEL -= 0.8
-        if self.JUMP_VEL < self.JUMP_VEL:
+            self.dino_rect.y -= self.jump_vel * 4
+            self.jump_vel -= 0.2
+        if self.jump_vel < -self.JUMP_VEL:
             self.dino_jump = False
-            self.JUMP_VEL = 8.5
+            self.jump_vel = self.JUMP_VEL
+
+    def run(self):
+        self.img = self.run_img[self.step_index // 5 % len(self.run_img)]
+        self.dino_rect = self.img.get_rect()
+        self.dino_rect.x = self.X_POS
+        self.dino_rect.y = self.Y_POS
+        self.step_index += 1
+
+
+    def duck(self):
+        self.img = self.duck_img[self.step_index // 5 % len(self.duck_img)]
+        if self.dino_duck:
+            self.dino_rect.y = 340
+        self.step_index += 1
 
     def draw(self, screen):
         screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
@@ -105,4 +124,7 @@ def main():
         clock.tick(fps)
 
     pygame.quit()
+
+if __name__ == "__main__":
+    main()
 
