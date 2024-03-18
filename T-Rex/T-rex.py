@@ -9,12 +9,18 @@ pygame.init()
 Screen_Width = 1100
 Screen_Height = 600
 
+
 # Images
 
 # Dino
 RUNNING = [pygame.image.load('Assets/Dino/DinoRun1.png'), pygame.image.load('Assets/Dino/DinoRun2.png')]
 JUMPING = pygame.image.load('Assets/Dino/DinoJump.png')
 DUCKING = [pygame.image.load('Assets/Dino/DinoDuck1.png'), pygame.image.load('Assets/Dino/DinoDuck2.png')]
+
+# Ground
+GROUND = pygame.image.load('Assets/Other/Track.png')
+
+
 
 
 class Dino:
@@ -87,7 +93,8 @@ class Dino:
 
     def draw(self, screen):
         screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
-        
+
+
 
           
 # Initialize the screen
@@ -97,10 +104,26 @@ pygame.display.set_caption("T-Rex")
 
 # Main loop
 def main():
+    global game_speed, x_pos_ground, y_pos_ground, points, obstacles
     running = True
     clock = pygame.time.Clock()
     fps = 60
     player = Dino()
+    game_speed = 5
+    x_pos_ground = 0
+    y_pos_ground = 380
+
+
+    def ground():
+        global x_pos_ground, y_pos_ground
+        image_width = GROUND.get_width()
+        screen.blit(GROUND, (x_pos_ground, y_pos_ground))
+        screen.blit(GROUND, (image_width + x_pos_ground, y_pos_ground))
+        if x_pos_ground <= -image_width:
+            screen.blit(GROUND, (image_width + x_pos_ground, y_pos_ground))
+            x_pos_ground = 0
+        x_pos_ground -= game_speed
+
 
 
     
@@ -117,6 +140,8 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+        ground()
 
         # Update the screen
         pygame.display.update()
