@@ -93,10 +93,7 @@ class Dino:
 
     def draw(self, screen):
         screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
-
-
-
-          
+       
 # Initialize the screen
 screen = pygame.display.set_mode((Screen_Width, Screen_Height))
 pygame.display.set_caption("T-Rex")
@@ -124,9 +121,6 @@ def main():
             x_pos_ground = 0
         x_pos_ground -= game_speed
 
-
-
-    
     while running:
 
         userInput = pygame.key.get_pressed()
