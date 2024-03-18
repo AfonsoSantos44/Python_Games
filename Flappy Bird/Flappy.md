@@ -1,5 +1,8 @@
 # Flappy Bird Game
 
+![image](https://github.com/AfonsoSantos44/Python_Games/assets/126657273/f70172d9-1cef-4d04-9c8e-73fa1955de94)
+
+
 ## Overview
 Flappy Bird is a simple yet addictive game where the player controls a bird, guiding it through a series of pipes without crashing into them. The objective is to travel as far as possible, earning points for passing through the gaps between pipes.
 
