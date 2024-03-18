@@ -10,19 +10,22 @@ Here's a list of games available in this repository:
   - *Description:* Flappy Bird is a classic side-scrolling game where the player controls a bird, guiding it through a series of pipes without crashing.
   - *Implementation:* Developed using Pygame library.
 
-- *(Add other games here)*
+- *Description:* Trex Google Chrome Game (Not finish)
+- *Implementation:* Developed using Pygame library and inspired by maxontech game.
 
 ## How to Run
 
 To run any of the games in this repository, follow these steps:
 
 1. Clone the repository to your local machine using the following command:
-git clone https://github.com/AfonsoSantos44/Python_Games.git
 
-2. Navigate to the directory of the game you want to play.
+`git clone https://github.com/AfonsoSantos44/Python_Games.git`
 
-3. Run the Python script for the game. For example:
-python game_name.py
+3. Navigate to the directory of the game you want to play.
+
+4. Run the Python script for the game. For example:
+   
+`python game_name.py`
 
 ## Contributions
 
