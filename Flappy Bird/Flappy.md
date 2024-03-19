@@ -16,7 +16,6 @@ Flappy Bird is a simple yet addictive game where the player controls a bird, gui
 
 ## Scoring
 - Each successful passage through a gap between pipes earns one point.
-- The game keeps track of your highest score.
 
 ## Game Over
 The game ends under the following conditions:
