@@ -22,10 +22,10 @@ To run any of the games in this repository, follow these steps:
 
     `git clone https://github.com/AfonsoSantos44/Python_Games.git`
 
-3. Navigate to the directory of the game you want to play.
+2. Navigate to the directory of the game you want to play.
 
-4. Run the Python script for the game. For example:
-   
+3. Run the Python script for the game. For example:
+
     `python game_name.py`
 
 ## Contributions
