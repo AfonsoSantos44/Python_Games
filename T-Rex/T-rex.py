@@ -3,27 +3,30 @@ import pygame
 
 pygame.init()
 
+# Font
+font = pygame.font.Font(None, 40)
+
 # Global Variables
 Screen_Width = 1100
 Screen_Height = 600
 
 # Dino Images
-RUNNING = [pygame.image.load('T-Rex/Assets/Dino/DinoRun1.png'), pygame.image.load('T-Rex/Assets/Dino/DinoRun2.png')]
-JUMPING = pygame.image.load('T-Rex/Assets/Dino/DinoJump.png')
-DUCKING = [pygame.image.load('T-Rex/Assets/Dino/DinoDuck1.png'), pygame.image.load('T-Rex/Assets/Dino/DinoDuck2.png')]
-DEAD = pygame.image.load('T-Rex/Assets/Dino/DinoDead.png')
-START_IMAGE = pygame.image.load('T-Rex/Assets/Dino/DinoStart.png')
+RUNNING = [pygame.image.load('Assets/Dino/DinoRun1.png'), pygame.image.load('Assets/Dino/DinoRun2.png')]
+JUMPING = pygame.image.load('Assets/Dino/DinoJump.png')
+DUCKING = [pygame.image.load('Assets/Dino/DinoDuck1.png'), pygame.image.load('Assets/Dino/DinoDuck2.png')]
+DEAD = pygame.image.load('Assets/Dino/DinoDead.png')
+START_IMAGE = pygame.image.load('Assets/Dino/DinoStart.png')
 
 # Ground Image
-GROUND = pygame.image.load('T-Rex/Assets/Other/Track.png')
+GROUND = pygame.image.load('Assets/Other/Track.png')
 
 # Obstacle Images
-SMALL_CACTUS = [pygame.image.load('T-Rex/Assets/Cactus/SmallCactus1.png'), pygame.image.load('T-Rex/Assets/Cactus/SmallCactus2.png'), pygame.image.load('T-Rex/Assets/Cactus/SmallCactus3.png')]
-LARGE_CACTUS = [pygame.image.load('T-Rex/Assets/Cactus/LargeCactus1.png'), pygame.image.load('T-Rex/Assets/Cactus/LargeCactus2.png'), pygame.image.load('T-Rex/Assets/Cactus/LargeCactus3.png')]
-BIRD = [pygame.image.load('T-Rex/Assets/Bird/Bird1.png'), pygame.image.load('T-Rex/Assets/Bird/Bird2.png')]
+SMALL_CACTUS = [pygame.image.load('Assets/Cactus/SmallCactus1.png'), pygame.image.load('Assets/Cactus/SmallCactus2.png'), pygame.image.load('Assets/Cactus/SmallCactus3.png')]
+LARGE_CACTUS = [pygame.image.load('Assets/Cactus/LargeCactus1.png'), pygame.image.load('Assets/Cactus/LargeCactus2.png'), pygame.image.load('Assets/Cactus/LargeCactus3.png')]
+BIRD = [pygame.image.load('Assets/Bird/Bird1.png'), pygame.image.load('Assets/Bird/Bird2.png')]
 
 # Cloud Image
-CLOUD = pygame.image.load('T-Rex/Assets/Other/Cloud.png')
+CLOUD = pygame.image.load('Assets/Other/Cloud.png')
 
 class Dino:
     X_POS = 80
@@ -100,6 +103,12 @@ class Dino:
     def draw(self, screen):
         if self.dino_run:
             screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
+        elif self.dino_jump:
+            screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
+        elif self.dino_duck:
+            screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
+        else:
+            screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
 
 class Obstacle:
     def __init__(self, image, type):
@@ -172,14 +181,23 @@ def start(screen, player, cloud):
     y_pos_ground = 380
     obstacles = []
 
+    text = font.render('Tap the screen to start', True, (0, 0, 0))
+
+    
+    text_rect = text.get_rect(center=(Screen_Width/2, Screen_Height - 450))
+
     waiting_for_start = True
     while waiting_for_start:
+
         screen.fill((255, 255, 255))
         player.draw(screen)
         player.update(pygame.key.get_pressed(), False)
         cloud.draw(screen)
         cloud.update()
         ground(screen)
+
+        screen.blit(text, text_rect)
+
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -189,6 +207,7 @@ def start(screen, player, cloud):
             elif event.type == pygame.QUIT:
                 pygame.quit()
                 return
+
 
 # Main function
 def main():
