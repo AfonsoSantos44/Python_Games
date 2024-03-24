@@ -35,10 +35,10 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Flappy Bird")
 
 # Images
-background = pygame.image.load('Flappy Bird/images/bg.png')
-ground = pygame.image.load('Flappy Bird/images/ground.png')
-gameOver = pygame.image.load('Flappy Bird/images/game_over.png')
-restart = pygame.image.load('Flappy Bird/images/restart.png')
+background = pygame.image.load('images/bg.png')
+ground = pygame.image.load('images/ground.png')
+gameOver = pygame.image.load('images/game_over.png')
+restart = pygame.image.load('images/restart.png')
 
 
 #function for outputting text onto the screen
@@ -60,7 +60,7 @@ class Bird(pygame.sprite.Sprite):
         self.index = 0
         self.counter = 0
         for num in range(1, 4):
-            img = pygame.image.load(f'Flappy Bird/images/bird{num}.png')
+            img = pygame.image.load(f'images/bird{num}.png')
             self.images.append(img)
         self.image = self.images[self.index]
         self.rect = self.image.get_rect()
@@ -109,7 +109,7 @@ class Pipe(pygame.sprite.Sprite):
 
     def __init__(self, x, y, position):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('Flappy Bird/images/pipe.png')
+        self.image = pygame.image.load('images/pipe.png')
         self.rect = self.image.get_rect()
         # Position 1 is from the top, -1 is from the bottom
         if position == 1:
