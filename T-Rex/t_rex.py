@@ -1,19 +1,33 @@
-import random
-import pygame 
+"""
+This module contains the main game logic for the T-Rex game.
+The game is a simple endless runner game where the player controls a dinosaur 
+that can jump and duck to avoid obstacles. The game is over when the dinosaur 
+collides with an obstacle.
+"""
 
+# pylint: disable=no-member
+# pylint: disable=missing-docstring
+# pylint: disable=W0601,W0602
+# pylint: disable=C0103
+
+
+import random
+import pygame
 pygame.init()
 
 # Font
 font = pygame.font.Font(None, 40)
 
 # Global Variables
-Screen_Width = 1100
-Screen_Height = 600
+SCREEN_WIDTH = 1100
+SCREEN_HEIGHT = 600
 
 # Dino Images
-RUNNING = [pygame.image.load('Assets/Dino/DinoRun1.png'), pygame.image.load('Assets/Dino/DinoRun2.png')]
+RUNNING = [pygame.image.load('Assets/Dino/DinoRun1.png'),
+            pygame.image.load('Assets/Dino/DinoRun2.png')]
 JUMPING = pygame.image.load('Assets/Dino/DinoJump.png')
-DUCKING = [pygame.image.load('Assets/Dino/DinoDuck1.png'), pygame.image.load('Assets/Dino/DinoDuck2.png')]
+DUCKING = [pygame.image.load('Assets/Dino/DinoDuck1.png'),
+            pygame.image.load('Assets/Dino/DinoDuck2.png')]
 DEAD = pygame.image.load('Assets/Dino/DinoDead.png')
 START_IMAGE = pygame.image.load('Assets/Dino/DinoStart.png')
 
@@ -21,8 +35,12 @@ START_IMAGE = pygame.image.load('Assets/Dino/DinoStart.png')
 GROUND = pygame.image.load('Assets/Other/Track.png')
 
 # Obstacle Images
-SMALL_CACTUS = [pygame.image.load('Assets/Cactus/SmallCactus1.png'), pygame.image.load('Assets/Cactus/SmallCactus2.png'), pygame.image.load('Assets/Cactus/SmallCactus3.png')]
-LARGE_CACTUS = [pygame.image.load('Assets/Cactus/LargeCactus1.png'), pygame.image.load('Assets/Cactus/LargeCactus2.png'), pygame.image.load('Assets/Cactus/LargeCactus3.png')]
+SMALL_CACTUS = [pygame.image.load('Assets/Cactus/SmallCactus1.png'),
+                 pygame.image.load('Assets/Cactus/SmallCactus2.png'),
+                   pygame.image.load('Assets/Cactus/SmallCactus3.png')]
+LARGE_CACTUS = [pygame.image.load('Assets/Cactus/LargeCactus1.png'),
+                 pygame.image.load('Assets/Cactus/LargeCactus2.png'),
+                   pygame.image.load('Assets/Cactus/LargeCactus3.png')]
 BIRD = [pygame.image.load('Assets/Bird/Bird1.png'), pygame.image.load('Assets/Bird/Bird2.png')]
 
 # Cloud Image
@@ -43,11 +61,11 @@ class Dino:
         self.jump_img = JUMPING
         self.duck_img = DUCKING
         
-
         self.dino_run = False
         self.dino_jump = False
         self.dino_duck = False
         
+        self.image = None
         self.img = self.start_img
         self.dino_rect = self.img.get_rect()
         self.dino_rect.x = self.X_POS
@@ -114,58 +132,58 @@ class Dino:
             self.dino_rect.y = 340
         self.step_index += 1
 
-    def draw(self, screen):
+    def draw(self, display):
         if self.dino_run:
-            screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
+            display.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
         elif self.dino_jump:
-            screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
+            display.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
         elif self.dino_duck:
-            screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
+            display.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
         else:
-            screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
+            display.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
 
-    def draw_dead(self, screen):
+    def draw_dead(self, display):
         self.img = DEAD
-        screen.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
+        display.blit(self.img, (self.dino_rect.x, self.dino_rect.y))
 
 class Obstacle:
-    def __init__(self, image, type):
+    def __init__(self, image, obstacle_type):
         self.image = image
-        self.type = type
+        self.type = obstacle_type
         self.rect = self.image[self.type].get_rect()
-        self.rect.x = Screen_Width
+        self.rect.x = SCREEN_WIDTH
 
     def update(self):
         self.rect.x -= game_speed
         if self.rect.x < -self.rect.width:
             obstacles.pop()
 
-    def draw(self, screen):
-        screen.blit(self.image[self.type], self.rect)
+    def draw(self, display):
+        display.blit(self.image[self.type], self.rect)
 
 class SmallCactus(Obstacle):
-    def __init__(self, image, type):
-        super().__init__(image, type)
+    def __init__(self, image, obstacle_type):
+        super().__init__(image, obstacle_type)
         self.rect.y = 325
 
 class LargeCactus(Obstacle):
-    def __init__(self, image, type):
-        super().__init__(image, type)
+    def __init__(self, image, obstacle_type):
+        super().__init__(image, obstacle_type)
         self.rect.y = 300
 
 class Bird(Obstacle):
-    def __init__(self, image, type):
-        super().__init__(image, type)
+    def __init__(self, image, obstacle_type):
+        super().__init__(image, obstacle_type)
         self.rect.y = 250
         self.index = 0
         self.moving = True  # Flag to track movement
         self.update_allowed = True  # Flag to allow updating
 
-    def draw(self, screen):
+    def draw(self, display):
         if self.moving:
             if self.index >= 9:
                 self.index = 0
-            screen.blit(self.image[self.index // 5], self.rect)
+            display.blit(self.image[self.index // 5], self.rect)
             self.index += 1
 
 
@@ -173,7 +191,7 @@ class Bird(Obstacle):
 
 class Cloud:
     def __init__(self):
-        self.x = Screen_Width + random.randint(800, 1000)
+        self.x = SCREEN_WIDTH + random.randint(800, 1000)
         self.y = random.randint(50, 100)
         self.image = CLOUD
         self.width = self.image.get_width()
@@ -181,45 +199,42 @@ class Cloud:
     def update(self):
         self.x -= game_speed
         if self.x < -self.width:
-            self.x = Screen_Width + random.randint(2500, 3000)
+            self.x = SCREEN_WIDTH + random.randint(2500, 3000)
             self.y = random.randint(50, 100)
 
-    def draw(self, screen):
-        screen.blit(CLOUD, (self.x, self.y))
+    def draw(self, display):
+        display.blit(CLOUD, (self.x, self.y))
 
-def ground(screen):
+x_pos_ground = 0
+def ground(display):
     global x_pos_ground, y_pos_ground
     image_width = GROUND.get_width()
-    screen.blit(GROUND, (x_pos_ground, y_pos_ground))
-    screen.blit(GROUND, (image_width + x_pos_ground, y_pos_ground))
+    display.blit(GROUND, (x_pos_ground, y_pos_ground))
+    display.blit(GROUND, (image_width + x_pos_ground, y_pos_ground))
     if x_pos_ground <= -image_width:
-        screen.blit(GROUND, (image_width + x_pos_ground, y_pos_ground))
+        display.blit(GROUND, (image_width + x_pos_ground, y_pos_ground))
         x_pos_ground = 0
     x_pos_ground -= game_speed
 
-def start(screen, player, cloud):
+def start(display, game_player, game_cloud):
     global game_speed, x_pos_ground, y_pos_ground, obstacles
 
     game_speed = 0
 
     text = font.render('Tap the space to start', True, (0, 0, 0))
-
-    
-    text_rect = text.get_rect(center=(Screen_Width/2, Screen_Height - 450))
-
-
+    text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT - 450))
 
     waiting_for_start = True
     while waiting_for_start:
 
-        screen.fill((255, 255, 255))
-        player.draw(screen)
-        player.update(pygame.key.get_pressed(), False)
-        cloud.draw(screen)
-        cloud.update()
-        ground(screen)
+        display.fill((255, 255, 255))
+        game_player.draw(display)
+        game_player.update(pygame.key.get_pressed(), False)
+        game_cloud.draw(display)
+        game_cloud.update()
+        ground(display)
 
-        screen.blit(text, text_rect)
+        display.blit(text, text_rect)
 
         pygame.display.update()
         for event in pygame.event.get():
@@ -230,11 +245,10 @@ def start(screen, player, cloud):
             elif event.type == pygame.QUIT:
                 pygame.quit()
                 return
-            
-
 # Main function
 def main():
-    global game_speed, x_pos_ground, y_pos_ground, obstacles, points, screen, player, cloud, restart_rect, clock, fps, running, game_over_flag, highest_points
+    global game_speed, x_pos_ground, y_pos_ground, obstacles, points
+    global screen, player, cloud, restart_rect, clock, fps, running, game_over_flag, highest_points
     running = True
     clock = pygame.time.Clock()
     fps = 60
@@ -249,7 +263,7 @@ def main():
     game_over_flag = False  # Flag to indicate whether the game is over
 
     # Initialize the screen
-    screen = pygame.display.set_mode((Screen_Width, Screen_Height))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("T-Rex")
 
     def score():
@@ -257,18 +271,19 @@ def main():
         points += 1
         if points % 1000 == 0 and game_speed < 15:
             game_speed += 1
-        text = font.render("HI " + str(highest_points).zfill(5) + "  " + str(points).zfill(5), True, (0, 0, 0))  # Combine the highest score and current score into one string
-        text_rect = text.get_rect(topright=(Screen_Width - 20, 20))  
+        # Combine the highest score and current score into one string
+        text = font.render("HI " + str(highest_points).zfill(5) + "  " + str(points).zfill(5), True, (0, 0, 0))
+        text_rect = text.get_rect(topright=(SCREEN_WIDTH - 20, 20))
         screen.blit(text, text_rect)
         return points
 
     # Start state
     start(screen, player, cloud)
 
-    restart_rect = RESET.get_rect(center=(Screen_Width / 2, Screen_Height / 2))  # Define restart_rect variable
+    restart_rect = RESET.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
 
     while running:
-        userInput = pygame.key.get_pressed()
+        user_input = pygame.key.get_pressed()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -299,7 +314,7 @@ def main():
             # Draw the screen
             screen.fill((255, 255, 255))
             player.draw(screen)
-            player.update(userInput, game_speed > 0)
+            player.update(user_input, game_speed > 0)
 
             if game_speed > 0:
                 # Generate obstacles
@@ -322,8 +337,8 @@ def main():
                         text1 = font.render('Tap the space', True, (0, 0, 0))
                         text2 = font.render('or click the button to restart', True, (0, 0, 0))
 
-                        text1_rect = text1.get_rect(center=(Screen_Width / 2, Screen_Height - 450))  
-                        text2_rect = text2.get_rect(center=(Screen_Width / 2, Screen_Height - 420))  
+                        text1_rect = text1.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 450))  
+                        text2_rect = text2.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 420))  
 
                         screen.blit(text1, text1_rect)
                         screen.blit(text2, text2_rect)
@@ -338,8 +353,7 @@ def main():
                         else:
                             player.draw_dead(screen)
                             game_over_flag = True  # Set game over flag
-                            screen.blit(RESET, restart_rect)
-                    
+                            screen.blit(RESET, restart_rect)                  
             ground(screen)
 
             cloud.draw(screen)
@@ -355,8 +369,6 @@ def main():
 
     pygame.quit()
 
-
-
-
+     # Add newline at the end of the file
 if __name__ == "__main__":
     main()
