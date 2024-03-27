@@ -342,18 +342,22 @@ def main():
 
                         screen.blit(text1, text1_rect)
                         screen.blit(text2, text2_rect)
-
-                        if player.dino_rect.y < 250:
-                            player.is_falling = True
-                            player.fall()
-                        if  player.dino_duck:
+                        
+                        if player.dino_duck or not isinstance(obstacle, Bird):
                             player.image = DUCKING
-                            game_over_flag = True  # Set game over flag
+                            game_over_flag = True  
                             screen.blit(RESET, restart_rect)
                         else:
                             player.draw_dead(screen)
-                            game_over_flag = True  # Set game over flag
-                            screen.blit(RESET, restart_rect)                  
+                            game_over_flag = True
+                            screen.blit(RESET, restart_rect)
+
+
+                         
+                        
+                            
+                
+                                        
             ground(screen)
 
             cloud.draw(screen)
