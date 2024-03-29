@@ -11,7 +11,7 @@ Here's a list of games available in this repository:
   - *Implementation:* Developed using Pygame library.
 
 - **Trex Game**
-  - *Description:* Trex Google Chrome Game (Not finish)
+  - *Description:* Trex Google Chrome Game
   - *Implementation:* Developed using Pygame library and inspired by maxontech game.
 
 ## How to Run
