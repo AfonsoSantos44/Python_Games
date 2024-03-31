@@ -9,10 +9,13 @@ Here's a list of games available in this repository:
 - **Flappy Bird**
   - *Description:* Flappy Bird is a classic side-scrolling game where the player controls a bird, guiding it through a series of pipes without crashing.
   - *Implementation:* Developed using Pygame library.
+  - [Information](Python_Games/Flappy%20Bird/Flappy.md)
+
 
 - **Trex Game**
   - *Description:* Trex Google Chrome Game
   - *Implementation:* Developed using Pygame library and inspired by maxontech game.
+  - [Information](Python_Games/T-Rex/t_rex.md)
 
 ## How to Run
 
