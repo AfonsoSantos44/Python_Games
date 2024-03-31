@@ -16,6 +16,10 @@ Here's a list of games available in this repository:
   - *Description:* Trex Google Chrome Game
   - *Implementation:* Developed using Pygame library and inspired by maxontech game.
   - [Information](T-Rex/t_rex.md)
+    
+- **Snake Game** (Not Finished)
+  - *Description:* Default Snake Game
+  - *Implementation:* Developed using Pygame library
 
 ## How to Run
 
