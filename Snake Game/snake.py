@@ -6,21 +6,28 @@ import pygame
 pygame.init()
 
 # Screen
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 400
+SCREEN_WIDTH = 750
+SCREEN_HEIGHT = 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Snake Game")
-fps = 25
+fps = 20
 clock = pygame.time.Clock()
 
+# Colors
+WHITE = (255,255,255)
+BLACK = (0,0,0)
+RED = (255,0,0)
+DARK_GREEN = (0,100,0)
+
+
 # Font
-font = pygame.font.SysFont('times new roman', 30)
+font = pygame.font.SysFont('Ariel', 60)
 
 class Snake:
 
     def __init__(self):
-        self.position = (100,50)
-        self.body = [(100,50), (90,50), (80,50), (70,50)]
+        self.position = (120,60)
+        self.body = [(120,60), (90,60), (60,60), (30,60)]
         self.direction = "RIGHT"
         self.change_to = self.direction
         self.is_moving = True
@@ -37,13 +44,13 @@ class Snake:
                 self.direction = "RIGHT"
 
             if self.direction == "UP":
-                self.position = (self.position[0], self.position[1] - 5)
+                self.position = (self.position[0], self.position[1] - 30)
             if self.direction == "DOWN":
-                self.position = (self.position[0], self.position[1] + 5)
+                self.position = (self.position[0], self.position[1] + 30)
             if self.direction == "LEFT":
-                self.position = (self.position[0] - 5, self.position[1])
+                self.position = (self.position[0] - 30, self.position[1])
             if self.direction == "RIGHT":
-                self.position = (self.position[0] + 5, self.position[1])
+                self.position = (self.position[0] + 30, self.position[1])
 
             self.body.insert(0, self.position)
             self.body.pop()
@@ -52,12 +59,20 @@ class Snake:
      
     def draw(self):
         for segment in self.body:
-            pygame.draw.rect(screen, (0,0,0), (segment[0], segment[1], 10, 10))
+            pygame.draw.rect(screen, (DARK_GREEN), (segment[0], segment[1], 30, 30))
+
+def drawGrid():
+    square_size = 30
+    for x in range(0, SCREEN_WIDTH, square_size):
+        for y in range(0, SCREEN_HEIGHT, square_size):
+            rect = pygame.Rect(x, y, square_size, square_size)
+            pygame.draw.rect(screen, (BLACK), rect, 1)
+    
 
 def gameOver():
 
     text = font.render("Game Over", True, (255,0,0))
-    screen.blit(text, (SCREEN_WIDTH/2 - 75, SCREEN_HEIGHT/2 - 20))
+    screen.blit(text, (SCREEN_WIDTH/2 - 75, SCREEN_HEIGHT/2 - 30))
 
 def checkCollision():
     if snake.position[0] >= SCREEN_WIDTH or snake.position[0] < 0:
@@ -92,26 +107,15 @@ def main():
                     snake.change_to = "RIGHT"
                 
 
-        screen.fill((255,255,255))
+        screen.fill((WHITE))
+        
+        drawGrid()
         
         snake.draw()
 
         snake.move()
 
         checkCollision()
-
-
-        if not checkCollision():
-            if snake.direction == "UP":
-                snake.position = (snake.position[0], snake.position[1] - 10)
-            if snake.direction == "DOWN":
-                snake.position = (snake.position[0], snake.position[1] + 10)
-            if snake.direction == "LEFT":
-                snake.position = (snake.position[0] - 10, snake.position[1])
-            if snake.direction == "RIGHT":
-                snake.position = (snake.position[0] + 10, snake.position[1])
-
-
 
         pygame.display.update()
 
