@@ -228,6 +228,7 @@ def main():
                         apple.__init__()
                         game_over = False
                         button_rect = None
+                        score_val = 0
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if button_rect is not None and button_rect.collidepoint(event.pos):
                         # Go to score menu
